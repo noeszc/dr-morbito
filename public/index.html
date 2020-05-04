@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .block {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1500;
+        display: block;
+        pointer-events: none;
+        will-change: transform;
+      }
+      .block__inner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .block__circle {
+        transition: background-color 0.2s, border 0.2s;
+        border-style: solid;
+        border-color: var(--theme-cursor);
+      }
+      .block__circle-anim {
+        position: absolute;
+        top: calc(50% - 38.5px);
+        left: calc(50% - 38.5px);
+        pointer-events: none;
+      }
+      .block__circle-anim,
+      .block__circle-anim-inner {
+        transform-origin: center;
+      }
+      .block__circle-anim svg {
+        width: 60px;
+        height: 60px;
+      }
+      .block__circle-anim circle {
+        fill: #fb070700;
+        stroke: var(--theme-cursor);
+        stroke-width: 1;
+        stroke-dasharray: 180;
+        stroke-dashoffset: 180;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <a href="">Block</a>
+    </div>
+    <script src="bundle.js"></script>
+  </body>
+</html>
