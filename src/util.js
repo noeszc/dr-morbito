@@ -57,6 +57,10 @@ export function closest(element, selector, context = document) {
   }
 }
 
+export const ease = (a, b, c) => 
+   a + (b - a) * c;
+
+
 export default function createElement(name, options = {}) {
   const {
     dataName,

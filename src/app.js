@@ -1,8 +1,4 @@
-import createElement, { closest } from './util';
-
-const ease = (a, b, c) => {
-  return a + (b - a) * c;
-};
+import createElement, { closest, ease } from './util';
 
 class CustomCursor {
   props = {
@@ -42,13 +38,11 @@ class CustomCursor {
       { x: defaultXValue, _x: defaultXValue, lx: defaultXValue },
       { y: defaultYValue, _y: defaultYValue, ly: defaultYValue },
     );
-
-    this.init();
   }
 
   init() {
     // set cursor: 'none' global
-    // document.documentElement.style.cursor = this.props.cursor;
+    document.documentElement.style.cursor = this.props.cursor;
 
     this.elements.root = createElement('div', { className: 'block' });
 
@@ -110,11 +104,10 @@ class CustomCursor {
       this.elements.circle_anim.classList.remove('--is-link-hover');
       this.props.isLinkHover = false;
     }
-    console.log(this.props);
+
   };
 
   update = () => {
-    //requestAnimationFrame(this.update);
 
     let targetX = this.props._x;
     let targetY = this.props._y;
@@ -202,15 +195,16 @@ class CustomCursor {
 }
 
 const cursor = new CustomCursor();
-const toggle = document.getElementById('toggle');
+cursor.init();
+// const toggle = document.getElementById('toggle');
 
-toggle.addEventListener(
-  'click',
-  () => {
-    cursor.cleanup();
-  },
-  false,
-);
+// toggle.addEventListener(
+//   'click',
+//   () => {
+//     cursor.cleanup();
+//   },
+//   false,
+// );
 
 (function drawFrame(){
   window.requestAnimationFrame(drawFrame, cursor)
