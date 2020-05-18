@@ -1,4 +1,4 @@
-import createElement, { match } from './util';
+import createElement, { closest } from './util';
 
 const ease = (a, b, c) => {
   return a + (b - a) * c;
@@ -9,7 +9,8 @@ class CustomCursor {
     cursor: 'none',
     radius: 40,
     borderWidth: 1,
-    lockTriggers: "a, button",
+    lockTriggers: 'a, button',
+    isLinkHover: null,
     ease: 0.6,
     lockTravel: 0.2,
     lockEase: 0.2,
@@ -47,7 +48,7 @@ class CustomCursor {
 
   init() {
     // set cursor: 'none' global
-    document.documentElement.style.cursor = this.props.cursor;
+    // document.documentElement.style.cursor = this.props.cursor;
 
     this.elements.root = createElement('div', { className: 'block' });
 
@@ -78,7 +79,8 @@ class CustomCursor {
   }
 
   handleEvents({ removeEvents = false } = {}) {
-    const method = removeEvents ? 'remove' : 'add' + 'EventListener';
+    const method = (removeEvents ? 'remove' : 'add') + 'EventListener';
+
     document[method]('mousemove', this.onMouseMove);
     document[method]('mousedown', this.onMouseDown);
     document[method]('mouseup', this.onMouseUp);
@@ -101,18 +103,18 @@ class CustomCursor {
   };
 
   onHover = ({ target: el }) => {
-    if(this.props.lockTriggers) {
-      for(; el !== document.documentElement && el.parentNode ;) {
-        if(match(el, this.props.lockTriggers)) {
-          console.log('hover putoo');
-          return
-        }
-      }
+    if (closest(el, this.props.lockTriggers)) {
+      this.elements.circle_anim.classList.add('--is-link-hover');
+      this.props.isLinkHover = true;
+    } else {
+      this.elements.circle_anim.classList.remove('--is-link-hover');
+      this.props.isLinkHover = false;
     }
+    console.log(this.props);
   };
 
   update = () => {
-    requestAnimationFrame(this.update);
+    //requestAnimationFrame(this.update);
 
     let targetX = this.props._x;
     let targetY = this.props._y;
@@ -146,6 +148,11 @@ class CustomCursor {
     if (this.props.isDown) {
       targetWidth = targetWidth - 10;
       targetHeight = targetHeight - 10;
+    }
+
+    if (this.props.isLinkHover) {
+      targetWidth = targetWidth - 25;
+      targetHeight = targetHeight - 25;
     }
 
     this.props.width =
@@ -194,4 +201,18 @@ class CustomCursor {
   };
 }
 
-const cursor = new CustomCursor(arguments);
+const cursor = new CustomCursor();
+const toggle = document.getElementById('toggle');
+
+toggle.addEventListener(
+  'click',
+  () => {
+    cursor.cleanup();
+  },
+  false,
+);
+
+(function drawFrame(){
+  window.requestAnimationFrame(drawFrame, cursor)
+  cursor.update()
+}())

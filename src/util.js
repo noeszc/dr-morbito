@@ -13,19 +13,48 @@ export function isElementPreset(dataName) {
   return query(dataName);
 }
 
-export function match(el, selector) {
-  const proto = typeof Element !== undefined ? Element.prototype : {};
-  const vendor =
-    proto.matches ||
-    proto.matchesSelector ||
-    proto.webkitMatchesSelector ||
-    proto.mozMatchesSelector ||
-    proto.msMatchesSelector ||
-    proto.oMatchesSelector;
-  
-  if (!el || el.nodeType !== 1) return false;
-  if(vendor) return vendor.call(el, selector);
-  return false
+export function matches(elem, selector) {
+ // Vendor-specific implementations of `Element.prototype.matches()`.
+ const proto = window.Element.prototype;
+ const nativeMatches =
+   proto.matches ||
+   proto.mozMatchesSelector ||
+   proto.msMatchesSelector ||
+   proto.oMatchesSelector ||
+   proto.webkitMatchesSelector;
+
+ if (!elem || elem.nodeType !== 1) {
+   return false;
+ }
+
+ const parentElem = elem.parentNode;
+
+ // use native 'matches'
+ if (nativeMatches) {
+   return nativeMatches.call(elem, selector);
+ }
+
+ // native support for `matches` is missing and a fallback is required
+ const nodes = parentElem.querySelectorAll(selector);
+ const len = nodes.length;
+
+ for (let i = 0; i < len; i++) {
+   if (nodes[i] === elem) {
+     return true;
+   }
+ }
+
+ return false;
+}
+
+export function closest(element, selector, context = document) {
+  element = { parentNode: element };
+
+  while ((element = element.parentNode) && element !== context) {
+    if (matches(element, selector)) {
+      return element;
+    }
+  }
 }
 
 export default function createElement(name, options = {}) {
