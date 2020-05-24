@@ -22,6 +22,8 @@
     "serve": "11.3.0"
   },
   "dependencies": {
+    "@dogstudio/highway": "2.2.1",
+    "animejs": "3.2.0",
     "lodash.curry": "4.1.1",
     "lodash.throttle": "4.1.1"
   }
